@@ -23,12 +23,12 @@ class MyAppRouteInformationParser extends RouteInformationParser<MyAppConfigurat
   @override
   Future<MyAppConfiguration> parseRouteInformation(RouteInformation routeInformation) async {
     final uri = Uri.parse(routeInformation.location!);
-    if (uri.pathSegments.isEmpty) {
-      return MyAppConfiguration.home();
+    if (uri.pathSegments.length==0) {
+      return MyAppConfiguration.acua_home();
     } else if (uri.pathSegments.length == 1) {
       final first = uri.pathSegments[0].toLowerCase();
-      if (first == 'home') {
-        return MyAppConfiguration.home();
+      if (first == 'sensor') {
+        return MyAppConfiguration.acua_home();
       } else if (first == 'login') {
         return MyAppConfiguration.login();
       } else {
@@ -68,7 +68,7 @@ class MyAppRouteInformationParser extends RouteInformationParser<MyAppConfigurat
       return null;
     } else if (configuration.isLoginPage) {
       return RouteInformation(location: '/login');
-    } else if (configuration.isHomePage) {
+    } else if (configuration.isAcuaHome) {
       return RouteInformation(location: '/');
     } else if (configuration.isColorPage) {
       return RouteInformation(location: '/colors/${configuration.colorCode}');

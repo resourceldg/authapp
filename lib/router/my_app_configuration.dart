@@ -36,6 +36,12 @@ class MyAppConfiguration {
         loggedIn = true,
         colorCode = null;
 
+  MyAppConfiguration.acua_home()
+      : unknown = false,
+        shapeBorderType = null,
+        loggedIn = true,
+        colorCode = null;
+
   MyAppConfiguration.unknown()
       : unknown = true,
         shapeBorderType = null,
@@ -44,6 +50,8 @@ class MyAppConfiguration {
 
   bool get isUnknown => unknown == true;
   bool get isHomePage =>
+      unknown == false && loggedIn == true && colorCode == null && shapeBorderType == null;
+  bool get isAcuaHome =>
       unknown == false && loggedIn == true && colorCode == null && shapeBorderType == null;
   bool get isColorPage =>
       unknown == false && loggedIn == true && colorCode != null && shapeBorderType == null;

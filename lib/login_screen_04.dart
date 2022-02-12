@@ -1,3 +1,4 @@
+import 'package:authwallapp/acua_mvp_sensors_screen.dart';
 import 'package:authwallapp/widgets1/in_progress_message.dart';
 import 'package:common/dimens/app_dimens.dart';
 import 'package:flutter/material.dart';
@@ -73,6 +74,7 @@ const LoginScreen({Key? key, required this.onLogin,}) : super(key: key);
                                           final result = await authViewModel.login(email: _emailController.text, password: _passwordController.text); 
                                           if (result == true) {
                                             onLogin();
+                                            
                                           } else {
                                             authViewModel.logingIn = false;
                                             

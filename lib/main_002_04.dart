@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import 'package:authwallapp/data/acua_mvp_repostory.dart';
+import 'package:authwallapp/viewmodels/acua_view_model.dart';
 import 'package:common/cache/preference.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:authwallapp/router/my_app_router_delegate_04.dart';
 
@@ -22,7 +23,7 @@ import 'package:authwallapp/data/auth_repository.dart';
 import 'package:authwallapp/data/colors_repository.dart';
 import 'package:authwallapp/viewmodels/auth_view_model.dart';
 import 'package:authwallapp/viewmodels/colors_view_model.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter/services.dart'; 
 import 'package:provider/provider.dart';
 
 import 'configure_nonweb.dart' if (dart.library.html) 'configure_web.dart';
@@ -36,10 +37,10 @@ import 'MQTT_CONNECTORS/hum_suelo_connector.dart';
 import 'MQTT_CONNECTORS/pres_connector.dart';
 import 'MQTT_CONNECTORS/temp_connector.dart';
 import 'MQTT_CONNECTORS/termocuple_connector.dart';
-
+ 
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+WidgetsFlutterBinding.ensureInitialized();
   await TempProvider().init();
   await PresProvider().init();  
   await HumProvider().init();
@@ -50,7 +51,7 @@ void main() async {
   SystemChrome.setPreferredOrientations(<DeviceOrientation>[
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
-  ]);
+  ]); 
   configureApp();
   runApp(MyApp());
 }
@@ -65,13 +66,15 @@ class _MyAppState extends State<MyApp> {
   late MyAppRouteInformationParser parser;
   late AuthRepository authRepository;
   late ColorsRepository colorsRepository;
+  late AcuaMvpRepository acuaRepository;
 
   @override
   void initState() {
     super.initState();
     authRepository = AuthRepository(Preference());
     colorsRepository = ColorsRepository();
-    delegate = MyAppRouterDelegate(authRepository, colorsRepository);
+    acuaRepository = AcuaMvpRepository();
+    delegate = MyAppRouterDelegate(authRepository, colorsRepository,acuaRepository);
     parser = MyAppRouteInformationParser();
   }
 
@@ -84,6 +87,9 @@ class _MyAppState extends State<MyApp> {
         ),
         ChangeNotifierProvider<ColorsViewModel>(
           create: (_) => ColorsViewModel(colorsRepository),
+        ),
+        ChangeNotifierProvider<AcuaViewModel>(
+          create: (_) => AcuaViewModel(acuaRepository),
         ),
       ],
       child: MaterialApp.router(

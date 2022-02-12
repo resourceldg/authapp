@@ -55,7 +55,7 @@ class CplProvider {
     }
 
     //subscriber
-    const topic = 'cpl'; // Not a wildcard topic
+    const topic = 'luz'; // Not a wildcard topic
     client.subscribe(topic, MqttQos.atMostOnce);
 
     /// The client has a change notifier object(see the Observable class) which we then listen to to get

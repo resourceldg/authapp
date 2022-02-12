@@ -13,6 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import 'package:authwallapp/data/acua_mvp_repostory.dart';
+import 'package:authwallapp/router/pages/acua_home_page.dart';
 import 'package:common/extensions/color_extensions.dart';
 import 'package:common/model/shape_border_type.dart';
 import 'package:flutter/material.dart';
@@ -33,6 +35,7 @@ class MyAppRouterDelegate extends RouterDelegate<MyAppConfiguration>
   final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
   final AuthRepository authRepository;
   final ColorsRepository colorsRepository;
+  final AcuaMvpRepository acuaRepository;
 
   bool? _show404;
   bool? get show404 => _show404;
@@ -55,7 +58,7 @@ class MyAppRouterDelegate extends RouterDelegate<MyAppConfiguration>
     _loggedIn = value;
     notifyListeners();
   }
-
+ 
   List<Color>? _colors;
   List<Color>? get colors => _colors;
   set colors(List<Color>? value) {
@@ -88,7 +91,7 @@ class MyAppRouterDelegate extends RouterDelegate<MyAppConfiguration>
   @override
   GlobalKey<NavigatorState> get navigatorKey => _navigatorKey;
 
-  MyAppRouterDelegate(this.authRepository, this.colorsRepository) {
+  MyAppRouterDelegate(this.authRepository, this.colorsRepository, this.acuaRepository) {
     _init();
   }
 
@@ -96,6 +99,7 @@ class MyAppRouterDelegate extends RouterDelegate<MyAppConfiguration>
     loggedIn = await authRepository.isUserLoggedIn();
     if (loggedIn == true) {
       colors = await colorsRepository.fetchColors();
+   
     }
   }
 
@@ -107,8 +111,8 @@ class MyAppRouterDelegate extends RouterDelegate<MyAppConfiguration>
       return MyAppConfiguration.splash();
     } else if (show404 == true) {
       return MyAppConfiguration.unknown();
-    } else if (selectedColorCode == null) {
-      return MyAppConfiguration.home();
+    } else if (loggedIn == true) {
+      return MyAppConfiguration.acua_home();
     } else if (selectedShapeBorderType == null) {
       return MyAppConfiguration.color(selectedColorCode);
     } else if (selectedShapeBorderType != null) {
@@ -123,6 +127,8 @@ class MyAppRouterDelegate extends RouterDelegate<MyAppConfiguration>
     List<Page> stack;
     final loggedIn = this.loggedIn;
     final colors = this.colors;
+
+
     if (show404 == true) {
       stack = _unknownStack;
     } else if (loggedIn == null || (loggedIn && colors == null)) {
@@ -174,13 +180,13 @@ class MyAppRouterDelegate extends RouterDelegate<MyAppConfiguration>
     final selectedShapeBorderType = this.selectedShapeBorderType;
     final selectedColorCode = this.selectedColorCode;
     return [
-      HomePage(
-        onColorTap: (String colorCode) {
-          this.selectedColorCode = colorCode;
-        },
-        colors: colors,
-        onLogout: onLogout,
-      ),
+      SensorPage(
+          selectedColorCode:'333333',
+          onShapeTap: (ShapeBorderType shapeBorderType) {
+            this.selectedShapeBorderType = shapeBorderType;
+          },
+          onLogout: onLogout,
+        ),
       if (selectedColorCode != null)
         ColorPage(
           selectedColorCode: selectedColorCode,
@@ -202,7 +208,7 @@ class MyAppRouterDelegate extends RouterDelegate<MyAppConfiguration>
   Future<void> setNewRoutePath(MyAppConfiguration configuration) async {
     if (configuration.unknown) {
       show404 = true;
-    } else if (configuration.isHomePage ||
+    } else if (configuration.isAcuaHome ||
         configuration.isLoginPage ||
         configuration.isSplashPage) {
       show404 = false;
